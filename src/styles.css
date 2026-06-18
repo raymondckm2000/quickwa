@@ -105,6 +105,23 @@ h1 {
   font-weight: 600;
 }
 
+.country-select {
+  width: 100%;
+  min-height: 56px;
+  border: 2px solid #d8eadf;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #102015;
+  outline: none;
+  padding: 0 16px;
+  font-weight: 800;
+}
+
+.country-select:focus {
+  border-color: #25d366;
+  box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.14);
+}
+
 .phone-field {
   display: flex;
   align-items: center;
@@ -123,6 +140,7 @@ h1 {
 .country-code {
   align-self: stretch;
   display: grid;
+  min-width: 74px;
   place-items: center;
   padding: 0 15px;
   background: #eff8f2;
@@ -189,6 +207,7 @@ textarea:focus {
 .preview strong {
   color: #314038;
   font-size: 18px;
+  text-align: right;
 }
 
 .preview-valid {
