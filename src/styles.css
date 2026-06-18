@@ -238,7 +238,8 @@ textarea:focus {
   box-shadow: none;
 }
 
-.history-section {
+.history-section,
+.seo-section {
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid #e3eee7;
@@ -252,9 +253,17 @@ textarea:focus {
   margin-bottom: 10px;
 }
 
-.history-header h2 {
+.history-header h2,
+.seo-section h2 {
   margin: 0;
   font-size: 16px;
+}
+
+.seo-section p {
+  margin: 10px 0 0;
+  color: #516057;
+  font-size: 14px;
+  line-height: 1.55;
 }
 
 .text-button {
