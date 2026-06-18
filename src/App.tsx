@@ -2,10 +2,12 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 
 const HISTORY_KEY = 'quickwa:recent-numbers';
 const DEFAULT_MESSAGE = 'Hi, I would like to ask about your service.';
+const FALLBACK_COUNTRY_CODE = '1';
 
 type Country = {
   name: string;
   code: string;
+  iso2: string;
   localExample: string;
 };
 
@@ -16,34 +18,38 @@ type RecentNumber = {
   countryCode: string;
 };
 
+type GeoResponse = {
+  country_code?: string;
+};
+
 const COUNTRIES: Country[] = [
-  { name: 'Hong Kong', code: '852', localExample: '9123 4567' },
-  { name: 'Macau', code: '853', localExample: '6123 4567' },
-  { name: 'China', code: '86', localExample: '138 0013 8000' },
-  { name: 'Taiwan', code: '886', localExample: '912 345 678' },
-  { name: 'Singapore', code: '65', localExample: '8123 4567' },
-  { name: 'Malaysia', code: '60', localExample: '12 345 6789' },
-  { name: 'Thailand', code: '66', localExample: '81 234 5678' },
-  { name: 'Japan', code: '81', localExample: '90 1234 5678' },
-  { name: 'South Korea', code: '82', localExample: '10 1234 5678' },
-  { name: 'Philippines', code: '63', localExample: '917 123 4567' },
-  { name: 'Indonesia', code: '62', localExample: '812 3456 7890' },
-  { name: 'Vietnam', code: '84', localExample: '91 234 5678' },
-  { name: 'India', code: '91', localExample: '98765 43210' },
-  { name: 'United Arab Emirates', code: '971', localExample: '50 123 4567' },
-  { name: 'United Kingdom', code: '44', localExample: '7400 123456' },
-  { name: 'United States / Canada', code: '1', localExample: '415 555 2671' },
-  { name: 'Australia', code: '61', localExample: '412 345 678' },
-  { name: 'New Zealand', code: '64', localExample: '21 123 4567' },
-  { name: 'France', code: '33', localExample: '6 12 34 56 78' },
-  { name: 'Germany', code: '49', localExample: '151 23456789' },
-  { name: 'Italy', code: '39', localExample: '312 345 6789' },
-  { name: 'Spain', code: '34', localExample: '612 34 56 78' },
-  { name: 'Netherlands', code: '31', localExample: '6 12345678' },
-  { name: 'Switzerland', code: '41', localExample: '78 123 45 67' },
-  { name: 'Brazil', code: '55', localExample: '11 91234 5678' },
-  { name: 'Mexico', code: '52', localExample: '55 1234 5678' },
-  { name: 'South Africa', code: '27', localExample: '82 123 4567' },
+  { name: 'Hong Kong', code: '852', iso2: 'HK', localExample: '9123 4567' },
+  { name: 'Macau', code: '853', iso2: 'MO', localExample: '6123 4567' },
+  { name: 'China', code: '86', iso2: 'CN', localExample: '138 0013 8000' },
+  { name: 'Taiwan', code: '886', iso2: 'TW', localExample: '912 345 678' },
+  { name: 'Singapore', code: '65', iso2: 'SG', localExample: '8123 4567' },
+  { name: 'Malaysia', code: '60', iso2: 'MY', localExample: '12 345 6789' },
+  { name: 'Thailand', code: '66', iso2: 'TH', localExample: '81 234 5678' },
+  { name: 'Japan', code: '81', iso2: 'JP', localExample: '90 1234 5678' },
+  { name: 'South Korea', code: '82', iso2: 'KR', localExample: '10 1234 5678' },
+  { name: 'Philippines', code: '63', iso2: 'PH', localExample: '917 123 4567' },
+  { name: 'Indonesia', code: '62', iso2: 'ID', localExample: '812 3456 7890' },
+  { name: 'Vietnam', code: '84', iso2: 'VN', localExample: '91 234 5678' },
+  { name: 'India', code: '91', iso2: 'IN', localExample: '98765 43210' },
+  { name: 'United Arab Emirates', code: '971', iso2: 'AE', localExample: '50 123 4567' },
+  { name: 'United Kingdom', code: '44', iso2: 'GB', localExample: '7400 123456' },
+  { name: 'United States / Canada', code: '1', iso2: 'US', localExample: '415 555 2671' },
+  { name: 'Australia', code: '61', iso2: 'AU', localExample: '412 345 678' },
+  { name: 'New Zealand', code: '64', iso2: 'NZ', localExample: '21 123 4567' },
+  { name: 'France', code: '33', iso2: 'FR', localExample: '6 12 34 56 78' },
+  { name: 'Germany', code: '49', iso2: 'DE', localExample: '151 23456789' },
+  { name: 'Italy', code: '39', iso2: 'IT', localExample: '312 345 6789' },
+  { name: 'Spain', code: '34', iso2: 'ES', localExample: '612 34 56 78' },
+  { name: 'Netherlands', code: '31', iso2: 'NL', localExample: '6 12345678' },
+  { name: 'Switzerland', code: '41', iso2: 'CH', localExample: '78 123 45 67' },
+  { name: 'Brazil', code: '55', iso2: 'BR', localExample: '11 91234 5678' },
+  { name: 'Mexico', code: '52', iso2: 'MX', localExample: '55 1234 5678' },
+  { name: 'South Africa', code: '27', iso2: 'ZA', localExample: '82 123 4567' },
 ];
 
 function extractDigits(value: string) {
@@ -102,14 +108,52 @@ function saveHistory(items: RecentNumber[]) {
   localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
 }
 
+function findCountryByIso2(iso2: string) {
+  return COUNTRIES.find((country) => country.iso2 === iso2.toUpperCase());
+}
+
 export default function App() {
-  const [countryCode, setCountryCode] = useState('852');
+  const [countryCode, setCountryCode] = useState(FALLBACK_COUNTRY_CODE);
   const [phoneInput, setPhoneInput] = useState('');
   const [message, setMessage] = useState(DEFAULT_MESSAGE);
   const [history, setHistory] = useState<RecentNumber[]>([]);
+  const [locationStatus, setLocationStatus] = useState('Detecting your country code...');
 
   useEffect(() => {
     setHistory(loadHistory());
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function detectCountryCode() {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        if (!response.ok) throw new Error('Unable to detect location');
+
+        const data = (await response.json()) as GeoResponse;
+        const detectedCountry = data.country_code ? findCountryByIso2(data.country_code) : undefined;
+
+        if (!isMounted) return;
+
+        if (detectedCountry) {
+          setCountryCode(detectedCountry.code);
+          setLocationStatus(`Auto-detected: ${detectedCountry.name} (+${detectedCountry.code})`);
+        } else {
+          setLocationStatus('Country not detected. Please choose your country code.');
+        }
+      } catch {
+        if (isMounted) {
+          setLocationStatus('Country not detected. Please choose your country code.');
+        }
+      }
+    }
+
+    detectCountryCode();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const selectedCountry = COUNTRIES.find((country) => country.code === countryCode) ?? COUNTRIES[0];
@@ -148,9 +192,17 @@ export default function App() {
     window.location.href = whatsappUrl;
   }
 
+  function handleCountryChange(nextCountryCode: string) {
+    setCountryCode(nextCountryCode);
+    const selected = COUNTRIES.find((country) => country.code === nextCountryCode);
+    if (selected) {
+      setLocationStatus(`Selected: ${selected.name} (+${selected.code})`);
+    }
+  }
+
   function handleRecentClick(item: RecentNumber) {
-    setCountryCode(item.countryCode || '852');
-    setPhoneInput(getLocalNumber(item.normalized, item.countryCode || '852'));
+    setCountryCode(item.countryCode || FALLBACK_COUNTRY_CODE);
+    setPhoneInput(getLocalNumber(item.normalized, item.countryCode || FALLBACK_COUNTRY_CODE));
   }
 
   function clearHistory() {
@@ -177,7 +229,7 @@ export default function App() {
             id="country"
             className="country-select"
             value={countryCode}
-            onChange={(event) => setCountryCode(event.target.value)}
+            onChange={(event) => handleCountryChange(event.target.value)}
           >
             {COUNTRIES.map((country) => (
               <option key={`${country.code}-${country.name}`} value={country.code}>
@@ -185,6 +237,7 @@ export default function App() {
               </option>
             ))}
           </select>
+          <p className="helper-text location-status">{locationStatus}</p>
 
           <label className="field-label" htmlFor="phone">
             Phone number
@@ -202,7 +255,7 @@ export default function App() {
             />
           </div>
           <p className="helper-text" id="phone-help">
-            Choose the country code, then paste or type the number. Spaces, dashes and brackets are cleaned automatically.
+            We try to detect your country code from your IP address. You can still change it manually.
           </p>
 
           <div className={`preview ${isPhoneReady ? 'preview-valid' : ''}`} id="phone-preview">
