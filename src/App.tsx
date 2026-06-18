@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 
 const HISTORY_KEY = 'quickwa:recent-numbers';
-const DEFAULT_MESSAGE = '你好，我想查詢一下服務詳情。';
+const DEFAULT_MESSAGE = 'Hi, I would like to ask about your service.';
 
 type Country = {
   name: string;
@@ -218,7 +218,7 @@ export default function App() {
             rows={3}
             value={message}
             onChange={(event) => setMessage(event.target.value)}
-            placeholder="你好，我想查詢一下服務詳情。"
+            placeholder="Hi, I would like to ask about your service."
           />
 
           <button className="primary-button" type="submit" disabled={!isPhoneReady}>
@@ -248,6 +248,16 @@ export default function App() {
             </div>
           </section>
         )}
+
+        <section className="seo-section" aria-labelledby="seo-title">
+          <h2 id="seo-title">Quick WhatsApp chat link generator</h2>
+          <p>
+            QuickWA helps you open a WhatsApp conversation with any international phone number without saving it to your contacts first.
+          </p>
+          <p>
+            Select a country code, enter the phone number, add an optional message, and create a direct WhatsApp chat link instantly.
+          </p>
+        </section>
       </section>
     </main>
   );
