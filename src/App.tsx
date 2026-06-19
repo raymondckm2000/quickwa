@@ -23,33 +23,33 @@ type GeoResponse = {
 };
 
 const COUNTRIES: Country[] = [
-  { name: 'Hong Kong', code: '852', iso2: 'HK', localExample: '9123 4567' },
-  { name: 'Macau', code: '853', iso2: 'MO', localExample: '6123 4567' },
-  { name: 'China', code: '86', iso2: 'CN', localExample: '138 0013 8000' },
-  { name: 'Taiwan', code: '886', iso2: 'TW', localExample: '912 345 678' },
-  { name: 'Singapore', code: '65', iso2: 'SG', localExample: '8123 4567' },
-  { name: 'Malaysia', code: '60', iso2: 'MY', localExample: '12 345 6789' },
-  { name: 'Thailand', code: '66', iso2: 'TH', localExample: '81 234 5678' },
-  { name: 'Japan', code: '81', iso2: 'JP', localExample: '90 1234 5678' },
-  { name: 'South Korea', code: '82', iso2: 'KR', localExample: '10 1234 5678' },
-  { name: 'Philippines', code: '63', iso2: 'PH', localExample: '917 123 4567' },
-  { name: 'Indonesia', code: '62', iso2: 'ID', localExample: '812 3456 7890' },
-  { name: 'Vietnam', code: '84', iso2: 'VN', localExample: '91 234 5678' },
-  { name: 'India', code: '91', iso2: 'IN', localExample: '98765 43210' },
-  { name: 'United Arab Emirates', code: '971', iso2: 'AE', localExample: '50 123 4567' },
-  { name: 'United Kingdom', code: '44', iso2: 'GB', localExample: '7400 123456' },
-  { name: 'United States / Canada', code: '1', iso2: 'US', localExample: '415 555 2671' },
-  { name: 'Australia', code: '61', iso2: 'AU', localExample: '412 345 678' },
-  { name: 'New Zealand', code: '64', iso2: 'NZ', localExample: '21 123 4567' },
-  { name: 'France', code: '33', iso2: 'FR', localExample: '6 12 34 56 78' },
-  { name: 'Germany', code: '49', iso2: 'DE', localExample: '151 23456789' },
-  { name: 'Italy', code: '39', iso2: 'IT', localExample: '312 345 6789' },
-  { name: 'Spain', code: '34', iso2: 'ES', localExample: '612 34 56 78' },
-  { name: 'Netherlands', code: '31', iso2: 'NL', localExample: '6 12345678' },
-  { name: 'Switzerland', code: '41', iso2: 'CH', localExample: '78 123 45 67' },
-  { name: 'Brazil', code: '55', iso2: 'BR', localExample: '11 91234 5678' },
-  { name: 'Mexico', code: '52', iso2: 'MX', localExample: '55 1234 5678' },
-  { name: 'South Africa', code: '27', iso2: 'ZA', localExample: '82 123 4567' },
+  { name: 'Hong Kong', code: '852', iso2: 'HK', localExample: 'XXXX XXXX' },
+  { name: 'Macau', code: '853', iso2: 'MO', localExample: 'XXXX XXXX' },
+  { name: 'China', code: '86', iso2: 'CN', localExample: 'XXX XXXX XXXX' },
+  { name: 'Taiwan', code: '886', iso2: 'TW', localExample: 'XXX XXX XXX' },
+  { name: 'Singapore', code: '65', iso2: 'SG', localExample: 'XXXX XXXX' },
+  { name: 'Malaysia', code: '60', iso2: 'MY', localExample: 'XX XXX XXXX' },
+  { name: 'Thailand', code: '66', iso2: 'TH', localExample: 'XX XXX XXXX' },
+  { name: 'Japan', code: '81', iso2: 'JP', localExample: 'XX XXXX XXXX' },
+  { name: 'South Korea', code: '82', iso2: 'KR', localExample: 'XX XXXX XXXX' },
+  { name: 'Philippines', code: '63', iso2: 'PH', localExample: 'XXX XXX XXXX' },
+  { name: 'Indonesia', code: '62', iso2: 'ID', localExample: 'XXX XXXX XXXX' },
+  { name: 'Vietnam', code: '84', iso2: 'VN', localExample: 'XX XXX XXXX' },
+  { name: 'India', code: '91', iso2: 'IN', localExample: 'XXXXX XXXXX' },
+  { name: 'United Arab Emirates', code: '971', iso2: 'AE', localExample: 'XX XXX XXXX' },
+  { name: 'United Kingdom', code: '44', iso2: 'GB', localExample: 'XXXX XXXXXX' },
+  { name: 'United States / Canada', code: '1', iso2: 'US', localExample: 'XXX XXX XXXX' },
+  { name: 'Australia', code: '61', iso2: 'AU', localExample: 'XXX XXX XXX' },
+  { name: 'New Zealand', code: '64', iso2: 'NZ', localExample: 'XX XXX XXXX' },
+  { name: 'France', code: '33', iso2: 'FR', localExample: 'X XX XX XX XX' },
+  { name: 'Germany', code: '49', iso2: 'DE', localExample: 'XXX XXXXXXXX' },
+  { name: 'Italy', code: '39', iso2: 'IT', localExample: 'XXX XXX XXXX' },
+  { name: 'Spain', code: '34', iso2: 'ES', localExample: 'XXX XX XX XX' },
+  { name: 'Netherlands', code: '31', iso2: 'NL', localExample: 'X XXXXXXXX' },
+  { name: 'Switzerland', code: '41', iso2: 'CH', localExample: 'XX XXX XX XX' },
+  { name: 'Brazil', code: '55', iso2: 'BR', localExample: 'XX XXXXX XXXX' },
+  { name: 'Mexico', code: '52', iso2: 'MX', localExample: 'XX XXXX XXXX' },
+  { name: 'South Africa', code: '27', iso2: 'ZA', localExample: 'XX XXX XXXX' },
 ];
 
 function extractDigits(value: string) {
@@ -260,7 +260,7 @@ export default function App() {
 
           <div className={`preview ${isPhoneReady ? 'preview-valid' : ''}`} id="phone-preview">
             <span>Preview</span>
-            <strong>{formattedPhone || `+${countryCode} ____`}</strong>
+            <strong>{formattedPhone || `+${countryCode} ${selectedCountry.localExample}`}</strong>
           </div>
 
           <label className="field-label" htmlFor="message">
